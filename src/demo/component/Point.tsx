@@ -1,30 +1,32 @@
-import jsx from '../../jsx/jsx-runtime'
+import { Component } from '../../jsx/jsx-runtime'
 
-class PointInfo extends jsx.Component {
+class PointInfo extends Component {
   constructor (public props: { x: number, y: number }) {
-    super();
+    super(props);
   }
 
-  onClickFn (e: Event) {
+  onClickFn (e: MouseEvent) {
     console.log(this, e)
   }
 
   render () {
-    const {x, y} = this.props
-    return (<div>{x} + {y} <button onClick={this.onClickFn}>Sub button</button></div>)
+    const { x, y } = this.props
+    return (<div>{x} + {y}
+      <button onClick={this.onClickFn}>Sub button</button>
+    </div>)
   }
 }
 
-export default class Point extends jsx.Component {
+export default class Point extends Component {
   private ratio: number
 
   constructor (public x: number, public y: number) {
-    super()
+    super({ x, y })
     this.ratio = y / x
     this.onClickFn.bind(this)
   }
 
-  onClickFn (e: Event) {
+  onClickFn (e: MouseEvent) {
     console.log(this, e)
   }
 

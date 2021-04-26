@@ -1,3 +1,5 @@
+import ijJSX, { ComponentProps } from './jsx-types'
+
 const jsxFragment = 'jsx.Fragment'
 const jsxTextNode = 'jsx.Text'
 
@@ -12,14 +14,16 @@ function jsx (type: string | any, config: JSX.ElementChildrenAttribute): JSX.Ele
     return type(config)
   }
   const { children = [], ...props } = config;
-  const childrenProps = Array<JSX.Element>().concat(children);
+  const childrenProps = Array().concat(children);
   return {
     type,
+    key: null,
     props: {
       ...props,
       children: childrenProps.map((child: JSX.Element): JSX.Element => {
           return typeof child == 'object' ? child : {
             type: jsxTextNode,
+            key: null,
             props: {
               text: child,
               children: []
@@ -34,24 +38,29 @@ function jsx (type: string | any, config: JSX.ElementChildrenAttribute): JSX.Ele
 jsx.Fragment = jsxFragment
 jsx.TextNode = jsxTextNode
 jsx.emptyFragment = <></>
-jsx.customAttributes = ['children', 'className', 'key', 'props', 'dangerouslySetInnerHTML']
+jsx.customAttributes = ['children', 'className', 'key', 'props']
 
 const isStandardAttribute = (key: string) => !jsx.customAttributes.includes(key)
 
-jsx.Component = class implements JSX.Component {
-  public _dom: HTMLElement | DocumentFragment | null = null
+export class Component<P = {}> implements ijJSX.Component {
+  element: ijJSX.ComponentDOMElement = null
+  readonly props: P & ComponentProps<P>
 
-  render () {
-    return jsx.emptyFragment
+  constructor (props: P & ComponentProps<P>) {
+    this.props = props
+  }
+
+  render (): ijJSX.Node {
+    return null;
   }
 }
 
 jsx.renderDOM = (
-  renderable: JSX.Element | JSX.Component,
+  renderable: ijJSX.Node,
   container: jsxDOMContainer = null,
-  component: JSX.Component | null = null
+  component: ijJSX.Component | null = null
 ): jsxDOMElement => {
-  const isComponent = (renderable instanceof jsx.Component)
+  const isComponent = (renderable instanceof Component)
   // @ts-ignore
   let node: JSX.Element = isComponent ? renderable.render() : renderable
   if (isComponent) {
@@ -62,6 +71,9 @@ jsx.renderDOM = (
   const doc = (container === null) ? document : container.ownerDocument;
 
   if (node.type === jsx.TextNode) {
+    if (node.props.text === undefined) {
+      node.props.text = ''
+    }
     const textElem = doc.createTextNode(node.props.text)
     if (container !== null) {
       container.appendChild(textElem)
@@ -75,10 +87,7 @@ jsx.renderDOM = (
     : doc.createElement(node.type)
 
   // @ts-ignore
-  if (elem.dataset !== undefined) {
-    // @ts-ignore
-    elem.dataset.component = component
-  }
+  elem.jsxComponent = component
 
   const props = node.props
   const propKeys = Object.keys(props)
@@ -97,32 +106,37 @@ jsx.renderDOM = (
     .filter(isStandardAttribute)
     .forEach((name) => {
       let attrVal = props[name]
-      if (component !== null && (typeof attrVal === 'function')) {
+      if (component !== null && (attrVal instanceof Function)) {
         attrVal = attrVal.bind(component)
-        attrVal(null)
+        if (attrVal instanceof Function) {
+          attrVal(null)
+        }
       }
       // @ts-ignore
       elem[name.toLowerCase()] = attrVal
     })
 
   if (Array.isArray(node.props.children)) {
-    node.props.children.forEach((child: JSX.Element) => jsx.renderDOM(child, elem, component))
+    node.props.children.forEach((child: ijJSX.Node) => jsx.renderDOM(child, elem, component))
   }
+
+  let prevElement = null
 
   if (isComponent && component !== null) {
-    component._dom = elem
+    prevElement = component.element
+    component.element = elem
   }
 
-  if (isComponent && component !== null && component.componentWillMount !== undefined) {
-    component.componentWillMount(elem, props, propKeys)
+  if (isComponent && component !== null && component.onWillMount !== undefined) {
+    component.onWillMount(prevElement)
   }
 
   if (container !== null) {
     container.appendChild(elem)
   }
 
-  if (isComponent && component !== null && component.componentDidMount !== undefined) {
-    component.componentDidMount(elem, props, propKeys)
+  if (isComponent && component !== null && component.onDidMount !== undefined) {
+    component.onDidMount(prevElement)
   }
 
   return elem

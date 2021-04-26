@@ -44,15 +44,6 @@ jsx.Component = class implements JSX.Component {
   render () {
     return jsx.emptyFragment
   }
-
-  componentDidMount (element: JSX.ComponentDOM, props: JSX.ElementChildrenAttribute, propKeys: string[]): void {
-    console.log('component did mount', element)
-  }
-
-  componentWillMount (element: JSX.ComponentDOM, props: JSX.ElementChildrenAttribute, propKeys: string[]): void {
-    console.log('component will mount', element)
-  }
-
 }
 
 jsx.renderDOM = (
@@ -67,8 +58,6 @@ jsx.renderDOM = (
     // @ts-ignore
     component = renderable
   }
-
-  console.log(renderable, isComponent, container, component)
 
   const doc = (container === null) ? document : container.ownerDocument;
 
@@ -85,9 +74,11 @@ jsx.renderDOM = (
     ? doc.createDocumentFragment()
     : doc.createElement(node.type)
 
-
   // @ts-ignore
-  elem.dataset.component = component
+  if (elem.dataset !== undefined) {
+    // @ts-ignore
+    elem.dataset.component = component
+  }
 
   const props = node.props
   const propKeys = Object.keys(props)

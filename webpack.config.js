@@ -25,6 +25,11 @@ const baseConfig = {
                         presets: ['@babel/preset-env', '@babel/preset-typescript']
                     }
                 }
+            },
+            {
+                test: /\.(js)$/,
+                enforce: 'pre',
+                use: ['source-map-loader']
             }
 
             // Add your rules for custom modules here
@@ -39,14 +44,16 @@ const baseConfig = {
 module.exports = [
     Object.assign({}, baseConfig, {
         name: 'jsx-runtime',
-        entry: ['./src/jsx/jsx-runtime.tsx','./src/jsx/jsx-definitions.ts'],
+        devtool: 'inline-source-map',
+        entry: ['./src/jsx/jsx-runtime.tsx'],
         output: {
             path: path.resolve(__dirname, 'dist'),
-            filename: 'jsx-runtime.js'
-        },
+            filename: 'jsx/jsx-runtime.js'
+        }
     }),
     Object.assign({}, baseConfig, {
         name: 'demo',
+        devtool: 'inline-source-map',
         entry: './src/demo/index.ts',
         output: {
             path: path.resolve(__dirname, 'tmp/demo'),
@@ -54,7 +61,9 @@ module.exports = [
         },
         devServer: {
             open: true,
-            host: 'localhost'
+            host: 'localhost',
+            hot: true,
+            contentBase: './tmp/demo'
         },
         plugins: [
             new HtmlWebpackPlugin({
@@ -63,6 +72,6 @@ module.exports = [
 
             // Add your plugins here
             // Learn more obout plugins from https://webpack.js.org/configuration/plugins/
-        ],
+        ]
     })
 ]

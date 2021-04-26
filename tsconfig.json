@@ -13,14 +13,15 @@
     "jsx": "preserve",
     "esModuleInterop": true,
     "strict": true,
-    "outDir": "./dist"
+    "outDir": "./dist/jsx",
+    "sourceMap": true
   },
   "files": [
     "src/jsx/jsx-runtime.tsx"
   ],
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
+    "src/jsx/**/*.ts",
+    "src/jsx/**/*.tsx"
   ],
   "exclude": [
     "src/demo",

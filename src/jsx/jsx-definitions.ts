@@ -390,6 +390,7 @@ declare global {
       dangerouslySetInnerHTML?: {
         __html: string;
       };
+      dataset?: DOMStringMap
     }
 
     interface DOMAttributes<Target extends EventTarget>

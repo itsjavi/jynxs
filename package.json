@@ -5,6 +5,23 @@
   "description": "Extremely lightweight JSX runtime for TypeScript and JavaScript. Write JSX without React!",
   "author": "Javi Aguilar",
   "license": "MIT",
+  "homepage": "https://github.com/itsjavi/jsx-runtime#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsjavi/jsx-runtime.git"
+  },
+  "bugs": {
+    "url": "https://github.com/itsjavi/jsx-runtime/issues"
+  },
+  "keywords": [
+    "react",
+    "jsx",
+    "jsx-runtime",
+    "jsx-renderer",
+    "tsx",
+    "tsx-runtime",
+    "tsx-renderer"
+  ],
   "main": "./dist/jsx-runtime.js",
   "module": "./dist/jsx-runtime.module.js",
   "esmodule": "./dist/jsx-runtime.modern.js",
@@ -12,6 +29,19 @@
   "umd:main": "./dist/jsx-runtime.umd.js",
   "source": "src/jsx-runtime/index.ts",
   "types": "src/jsx-runtime/index.d.ts",
+  "files": [
+    "src",
+    "dist",
+    "!**/*.html",
+    "!**/*.spec.*",
+    "!**/*.test.*",
+    "!**/*.json",
+    "!**/*.yaml",
+    "!**/*.yml",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "dev": "run-s clean watch",
     "test": "run-s test:*",

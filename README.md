@@ -1,8 +1,26 @@
-# jsx-runtime
+# @itsjavi/jsx-runtime
 
 Extremely lightweight JSX runtime (~ 2 KiB when minified) compatible with TypeScript and JavaScript, to be used together
-with
-[Bable automatic JSX runtime](https://babeljs.io/docs/en/babel-plugin-transform-react-jsx#react-automatic-runtime).
+with [Bable automatic JSX runtime](https://babeljs.io/docs/en/babel-plugin-transform-react-jsx#react-automatic-runtime).
+
+
+## Why another React clone?
+Compared to other solutions like `Preact` and `Inferno`, which are an alternative to all React features, this project just focuses on minimalism: a simplistic JSX runtime with basic features to build things like standalone widgets that require some JavaScript like: form controls, context menus, modal forms, pop ups, color pickers, etc.
+
+The idea is that the final build of your widget will include the jsx-runtime, so it will be standalone and others won't need React or this runtime
+in order to use it. `microbundle` is a nice bundler for projects like that.
+
+
+## Designed Features
+
+- JSX Runtime written in TypeScript to ensure 100% compatibility
+- Minimal size (~2KiB minified), perfect for standalone UI packages
+- Can be used in the browser, node or electron (multi target builds)
+- Class and function components with props and children support (experimental)
+- Simple `onWillMount` and `onDidMount` component life-cycle methods (experimental)
+- Auto-join (with space) of array of strings in the `className` attribute
+- Auto-bind of functions to the component's "`this`", e.g. on `<div onClick={this.doSomething} />`
+
 
 ## Setup
 
@@ -14,6 +32,73 @@ or
 
 ```bash
 yarn add -D @itsjavi/jsx-runtime
+```
+
+### Usage
+
+Example:
+
+```tsx
+import { Component } from '@itsjavi/jsx-runtime'
+
+function fnComp ({ a, b, children }: { a: number, b: number, children: any }): JSX.Element {
+  return <div>hey{a}, {b} <br/>{children}</div>
+}
+
+class PointInfo extends Component {
+  constructor (public props: { x: number, y: number }) {
+    super(props);
+  }
+
+  onClickFn (e: Event) {
+    console.log(this, e, "I am a sub button")
+  }
+
+  render () {
+    const { x, y } = this.props
+    return (<div>{x} + {y}
+      <button onClick={this.onClickFn}>Sub button</button>
+    </div>)
+  }
+}
+
+export default class Point extends Component {
+  private ratio: number
+
+  constructor (public props: { x: number, y: number }) {
+    super(props)
+    this.ratio = this.props.y / this.props.y
+    this.onClickFn.bind(this)
+  }
+
+
+  onClickFn (e: Event) {
+    console.log(this, e, e.target)
+  }
+
+  render () {
+    const { x, y } = this.props
+
+    return <div id="demo" className={['xx', 'yx']}>
+      <p>
+        Lorem
+        <b>
+          ipsum
+          <i>dolor</i>
+        </b>
+      </p>
+      <div>sit</div>
+      <hr/>
+      <>
+        amet
+      </>
+      <fnComp className="test-class">hello world</fnComp>
+      <PointInfo x={x} y={y}/>
+      <button onClick={this.onClickFn}>Click me</button>
+    </div>
+  }
+}
+
 ```
 
 ### Configuration

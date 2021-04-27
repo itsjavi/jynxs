@@ -1,10 +1,7 @@
 // Docs: https://www.typescriptlang.org/docs/handbook/jsx.html
 // Refs: https://www.reactenlightenment.com/react-jsx/5.7.html
 
-import { Key } from './jsx-types'
-
-export = ijJSX;
-export as namespace ijJSX;
+export default ijJSX;
 
 declare namespace ijJSX {
   type Key = string | number;

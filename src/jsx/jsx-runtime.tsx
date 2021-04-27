@@ -1,4 +1,4 @@
-import ijJSX, { ComponentProps } from './jsx-types'
+import ijJSX from './jsx-types'
 
 const jsxFragment = 'jsx.Fragment'
 const jsxTextNode = 'jsx.Text'
@@ -44,9 +44,9 @@ const isStandardAttribute = (key: string) => !jsx.customAttributes.includes(key)
 
 export class Component<P = {}> implements ijJSX.Component {
   element: ijJSX.ComponentDOMElement = null
-  readonly props: P & ComponentProps<P>
+  readonly props: P & ijJSX.ComponentProps<P>
 
-  constructor (props: P & ComponentProps<P>) {
+  constructor (props: P & ijJSX.ComponentProps<P>) {
     this.props = props
   }
 

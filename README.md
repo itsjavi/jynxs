@@ -24,7 +24,7 @@ in order to use it. `microbundle` is a nice bundler for projects like that.
 - Auto-bind of functions to the component's "`this`", e.g. on `<div onClick={this.doSomething} />`
 
 
-## Setup
+## Install
 
 ```bash
 npm i -D @itsjavi/jsx-runtime
@@ -34,73 +34,6 @@ or
 
 ```bash
 yarn add -D @itsjavi/jsx-runtime
-```
-
-### Usage
-
-Example:
-
-```tsx
-import { Component } from '@itsjavi/jsx-runtime'
-
-function fnComp ({ a, b, children }: { a: number, b: number, children: any }): JSX.Element {
-  return <div>hey{a}, {b} <br/>{children}</div>
-}
-
-class PointInfo extends Component {
-  constructor (public props: { x: number, y: number }) {
-    super(props);
-  }
-
-  onClickFn (e: Event) {
-    console.log(this, e, "I am a sub button")
-  }
-
-  render () {
-    const { x, y } = this.props
-    return (<div>{x} + {y}
-      <button onClick={this.onClickFn}>Sub button</button>
-    </div>)
-  }
-}
-
-export default class Point extends Component {
-  private ratio: number
-
-  constructor (public props: { x: number, y: number }) {
-    super(props)
-    this.ratio = this.props.y / this.props.y
-    this.onClickFn.bind(this)
-  }
-
-
-  onClickFn (e: Event) {
-    console.log(this, e, e.target)
-  }
-
-  render () {
-    const { x, y } = this.props
-
-    return <div id="demo" className={['xx', 'yx']}>
-      <p>
-        Lorem
-        <b>
-          ipsum
-          <i>dolor</i>
-        </b>
-      </p>
-      <div>sit</div>
-      <hr/>
-      <>
-        amet
-      </>
-      <fnComp className="test-class">hello world</fnComp>
-      <PointInfo x={x} y={y}/>
-      <button onClick={this.onClickFn}>Click me</button>
-    </div>
-  }
-}
-
 ```
 
 ### Configuration
@@ -292,4 +225,71 @@ Example `package.json`:
     "not IE 11"
   ]
 }
+```
+
+## Usage
+
+Examples:
+
+```tsx
+import { Component } from '@itsjavi/jsx-runtime'
+
+function fnComp ({ a, b, children }: { a: number, b: number, children: any }): JSX.Element {
+  return <div>hey{a}, {b} <br/>{children}</div>
+}
+
+class PointInfo extends Component {
+  constructor (public props: { x: number, y: number }) {
+    super(props);
+  }
+
+  onClickFn (e: Event) {
+    console.log(this, e, "I am a sub button")
+  }
+
+  render () {
+    const { x, y } = this.props
+    return (<div>{x} + {y}
+      <button onClick={this.onClickFn}>Sub button</button>
+    </div>)
+  }
+}
+
+export default class Point extends Component {
+  private ratio: number
+
+  constructor (public props: { x: number, y: number }) {
+    super(props)
+    this.ratio = this.props.y / this.props.y
+    this.onClickFn.bind(this)
+  }
+
+
+  onClickFn (e: Event) {
+    console.log(this, e, e.target)
+  }
+
+  render () {
+    const { x, y } = this.props
+
+    return <div id="demo" className={['xx', 'yx']}>
+      <p>
+        Lorem
+        <b>
+          ipsum
+          <i>dolor</i>
+        </b>
+      </p>
+      <div>sit</div>
+      <hr/>
+      <>
+        amet
+      </>
+      <fnComp className="test-class">hello world</fnComp>
+      <PointInfo x={x} y={y}/>
+      <button onClick={this.onClickFn}>Click me</button>
+    </div>
+  }
+}
+
 ```

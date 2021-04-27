@@ -1,7 +1,7 @@
 {
   "name": "@itsjavi/jsx-runtime",
   "amdName": "jsxrt",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Extremely lightweight JSX runtime for TypeScript and JavaScript. Write JSX without React!",
   "author": "Javi Aguilar",
   "license": "MIT",

@@ -8,7 +8,7 @@ with [Bable automatic JSX runtime](https://babeljs.io/docs/en/babel-plugin-trans
 Compared to other solutions like `Preact` and `Inferno`, which are an alternative to all React features, this project just focuses on minimalism: a simplistic JSX runtime with basic features to build things like standalone widgets that require some JavaScript like: form controls, context menus, modal forms, pop ups, color pickers, etc.
 
 The idea is that the final build of your widget will include the jsx-runtime, so it will be standalone and others won't need React or this runtime
-in order to use it. `microbundle` is a nice bundler for projects like that.
+in order to use it. `microbundle` is a nice zero-configuration bundler for projects like that.
 
 
 ## Designed Features

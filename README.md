@@ -5,6 +5,8 @@ to be used together with Bable & Webpack.
 
 ## Setup
 
+This package is not yet published in npm, but you can install it via:
+
 ```bash
-npm i -D @itsjavi/jsx-runtime
+npm i -D git+https://github.com/itsjavi/jsx-runtime.git
 ```

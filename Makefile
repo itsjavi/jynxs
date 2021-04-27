@@ -4,6 +4,6 @@ build:
 	npm run build
 
 dev:
-	npm run serve
+	npm run dev
 
 .PHONY: build dev

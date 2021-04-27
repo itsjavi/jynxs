@@ -1,37 +1,35 @@
 {
   "name": "@itsjavi/jsx-runtime",
+  "amdName": "jsxrt",
   "version": "0.0.1",
   "description": "Extremely lightweight JSX runtime for TypeScript and JavaScript. Write JSX without React!",
-  "main": "dist/jsx/jsx-runtime.js",
-  "module": "dist/jsx/jsx-runtime.js",
+  "author": "Javi Aguilar",
+  "license": "MIT",
+  "main": "./dist/jsx-runtime.js",
+  "module": "./dist/jsx-runtime.module.js",
+  "esmodule": "./dist/jsx-runtime.modern.js",
+  "exports": "./dist/jsx-runtime.modern.js",
+  "umd:main": "./dist/jsx-runtime.umd.js",
+  "source": "src/jsx-runtime/index.ts",
+  "types": "src/jsx-runtime/index.d.ts",
   "scripts": {
+    "dev": "run-s clean watch",
     "test": "run-s test:*",
     "test:typecheck": "tsc --noEmit",
     "build": "run-s clean build:*",
-    "build:webpack": "webpack --mode=development && webpack --mode=production",
     "build:tsc": "tsc --declaration --emitDeclarationOnly",
-    "watch": "webpack --watch",
-    "serve": "npm run build && webpack serve",
+    "build:micro": "microbundle build --raw",
+    "watch": "microbundle watch",
     "clean": "rm -rf ./dist/* ./tmp/*"
-  },
-  "author": "Javi Aguilar",
-  "license": "ISC",
-  "dependencies": {
-    "typescript": "^4.2.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.16",
     "@babel/core": "^7.13.16",
-    "@babel/plugin-transform-react-jsx": "^7.13.12",
     "@babel/preset-env": "^7.13.15",
     "@babel/preset-typescript": "^7.13.0",
-    "babel-loader": "^8.2.2",
-    "html-webpack-plugin": "^5.3.1",
+    "microbundle": "^0.13.0",
     "npm-run-all": "^4.1.5",
-    "source-map-loader": "^2.0.1",
-    "webpack": "^5.35.1",
-    "webpack-cli": "^4.6.0",
-    "webpack-dev-server": "^3.11.2"
+    "typescript": "^4.2.4"
   },
   "browserslist": [
     "defaults",

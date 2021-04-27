@@ -55,7 +55,7 @@ Example `babel.config.js`:
 
 Example `tsconfig.json`:
 
-```json
+```json5
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,

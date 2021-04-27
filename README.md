@@ -16,7 +16,9 @@ in order to use it. `microbundle` is a nice bundler for projects like that.
 - JSX Runtime written in TypeScript to ensure 100% compatibility
 - Minimal size (~2KiB minified), perfect for standalone UI packages
 - Can be used in the browser, node or electron (multi target builds)
-- Class and function components with props and children support (experimental)
+- Class components and props support
+- Function components support (experimental)
+- props.children support (experimental)
 - Simple `onWillMount` and `onDidMount` component life-cycle methods (experimental)
 - Auto-join (with space) of array of strings in the `className` attribute
 - Auto-bind of functions to the component's "`this`", e.g. on `<div onClick={this.doSomething} />`

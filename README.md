@@ -71,7 +71,13 @@ Example `tsconfig.json`:
     "jsx": "preserve",
     "esModuleInterop": true,
     "strict": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": { // important to find the proper JSX types on type check when writing TSX
+      "@itsjavi/jsx-runtime": [
+        "./node_modules/@itsjavi/jsx-runtime/src/jsx-runtime/index.ts"
+      ]
+    }
   },
   "files": [
     "src/index.ts"

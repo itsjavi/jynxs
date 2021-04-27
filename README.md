@@ -6,13 +6,22 @@ with
 
 ## Setup
 
-This package is not yet published in npm, but you can install it via:
-
 ```bash
 npm i -D @itsjavi/jsx-runtime
 ```
 
+or
+
+```bash
+yarn add -D @itsjavi/jsx-runtime
+```
+
 ### Configuration
+
+The most important part is to configure `@babel/plugin-transform-react-jsx` correctly,
+which will be the one detecting this library and using it to transform JSX / TSX to JS.
+
+These example configurations showcase a setup with Babel, Webpack, TypeScript and CSS loaders.
 
 Example `babel.config.js`:
 

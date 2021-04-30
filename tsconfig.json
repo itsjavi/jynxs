@@ -13,7 +13,8 @@
     "jsx": "preserve",
     "esModuleInterop": true,
     "strict": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "moduleResolution": "Node"
   },
   "files": [
     "src/jsx-runtime/index.ts"

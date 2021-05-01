@@ -5,3 +5,7 @@
 node_modules
 dist
 tmp
+*.mjs
+src/**/*.js
+tests/**/*.js
+tests-compiled

@@ -2,7 +2,7 @@ const jsxFragment = 'jsx.Fragment'
 const jsxTextNode = 'jsx.Text'
 
 type jsxDOMContainer = HTMLElement | DocumentFragment | null
-type jsxDOMElement = Text | HTMLElement | DocumentFragment
+type jsxDOMElement = HTMLElement | DocumentFragment | Text
 
 function jsx (type: string | any, config: JSX.ElementChildrenAttribute): JSX.Element {
   if (typeof type === 'function') {
@@ -52,6 +52,14 @@ class Component<P = {}> implements ijJSX.Component {
   }
 }
 
+if (typeof window !== "undefined") {
+  jsx._globalThis = window
+}
+
+jsx.setGlobalThis = (newThis: Window & typeof globalThis) => {
+  jsx._globalThis = newThis
+}
+
 jsx.renderDOM = (
   renderable: ijJSX.Node,
   container: jsxDOMContainer = null,
@@ -65,7 +73,7 @@ jsx.renderDOM = (
     component = renderable
   }
 
-  const doc = (container === null) ? document : container.ownerDocument;
+  const doc = (container === null) ? jsx._globalThis.document : container.ownerDocument;
 
   if (node.type === jsx.TextNode) {
     if (node.props.text === undefined) {
@@ -147,7 +155,7 @@ jsx.renderDOM = (
  * https://www.reactenlightenment.com/react-jsx/5.7.html
  */
 
-declare namespace ijJSX {
+export declare namespace ijJSX {
   type Key = string | number;
   type KeyValuePair = { [key: string]: unknown }
   type Child = Element | string | number;

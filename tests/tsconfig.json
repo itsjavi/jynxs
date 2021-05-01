@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "noImplicitAny": true,
+    "module": "ESNext",
+    "target": "ESNext",
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "allowJs": true,
+    "jsx": "preserve",
+    "baseUrl": "../",
+    "jsxImportSource": "src",
+    "jsxFactory": "jsx.Render",
+    "jsxFragmentFactory": "jsx.Fragment",
+    "esModuleInterop": true,
+    "sourceMap": false,
+    "moduleResolution": "Node",
+    "importHelpers": true,
+    "outDir": "../tests-compiled"
+  },
+  "include": [
+    "../src/jsx-runtime/index.ts",
+    "./*.ts",
+    "./*.tsx"
+  ]
+}

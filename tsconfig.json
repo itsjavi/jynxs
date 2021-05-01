@@ -22,9 +22,5 @@
   "include": [
     "src/jsx-runtime/**/*.ts",
     "src/jsx-runtime/**/*.tsx"
-  ],
-  "exclude": [
-    "src/demo",
-    "src/demo/*"
   ]
 }

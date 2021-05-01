@@ -1,11 +1,13 @@
 declare const jsxFragment = "jsx.Fragment";
 declare type jsxDOMContainer = HTMLElement | DocumentFragment | null;
-declare type jsxDOMElement = Text | HTMLElement | DocumentFragment;
+declare type jsxDOMElement = HTMLElement | DocumentFragment | Text;
 declare function jsx(type: string | any, config: JSX.ElementChildrenAttribute): JSX.Element;
 declare namespace jsx {
     var Fragment: string;
     var TextNode: string;
     var customAttributes: string[];
+    var _globalThis: Window & typeof globalThis;
+    var setGlobalThis: (newThis: Window & typeof globalThis) => void;
     var renderDOM: (renderable: ijJSX.Node, container?: jsxDOMContainer, component?: ijJSX.Component<{}> | null) => jsxDOMElement;
 }
 declare class Component<P = {}> implements ijJSX.Component {
@@ -14,7 +16,7 @@ declare class Component<P = {}> implements ijJSX.Component {
     constructor(props: P & ijJSX.ComponentProps<P>);
     render(): ijJSX.Node;
 }
-declare namespace ijJSX {
+export declare namespace ijJSX {
     type Key = string | number;
     type KeyValuePair = {
         [key: string]: unknown;

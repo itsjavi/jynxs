@@ -1,5 +1,5 @@
 import {JSDOM} from 'jsdom'
-import {jsx, render} from '../dist/jsx-runtime.module'
+import {jsx, render} from '../src/jsx-runtime'
 
 const helpers = () => {
   const dom = new JSDOM('<html lang="en"><body></body></html>')

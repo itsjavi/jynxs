@@ -14,6 +14,8 @@ test-compile:
 		  --retain-lines -d ./tests-compiled --out-file-extension=.mjs
 
 test: test-compile
+
+test-mocha:
 	mocha --require \"@babel/register\" 'tests-compiled/**/*.test.mjs'
 
 .PHONY: build dev

@@ -1,0 +1,14 @@
+sudo: false
+language: node_js
+node_js:
+  - 16
+
+cache: npm
+
+branches:
+  only:
+    - main
+
+script:
+  - npm install
+  - make test

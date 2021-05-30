@@ -1,9 +1,9 @@
 import {expect} from 'chai'
 import {it} from 'mocha'
 import {Component} from '../src/jsx-runtime'
-import {createBlankPageCallback, h} from './helpers'
+import {createGlobalBlankPage, h} from './helpers'
 
-beforeEach(createBlankPageCallback)
+beforeEach(createGlobalBlankPage)
 
 describe('JSX Runtime', () => {
   it('div is NOT inserted in the dom', () => {

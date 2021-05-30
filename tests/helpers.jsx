@@ -1,7 +1,7 @@
 import {JSDOM} from 'jsdom'
 import {jsx, render} from '../src/jsx-runtime'
 
-const helpers = () => {
+const createBlankPage = () => {
   const dom = new JSDOM('<html lang="en"><body></body></html>')
   const document = dom.window.document
   const window = document.defaultView
@@ -19,11 +19,8 @@ const helpers = () => {
   return {dom, document, window}
 }
 
-const createBlankPageCallback = () => {
-  const page = helpers()
-  if (page.window === null) {
-    throw new Error('page.window is null')
-  }
+const createGlobalBlankPage = () => {
+  const page = createBlankPage()
   jsx.setGlobalThis(page.window)
 }
 
@@ -31,4 +28,4 @@ const h = (node, container = null) => {
   return render(node, container)
 }
 
-export {helpers, createBlankPageCallback, h}
+export {createBlankPage, createGlobalBlankPage, h}

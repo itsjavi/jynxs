@@ -13,7 +13,7 @@ test-compile:
 	babel --config-file=./tests/babel.config.json ./tests -x '.jsx' \
 		  --retain-lines -d ./tests-compiled --out-file-extension=.mjs
 
-test: test-compile
+test: test-compile test-mocha
 
 test-mocha:
 	mocha --require \"@babel/register\" 'tests-compiled/**/*.test.mjs'

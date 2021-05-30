@@ -11,8 +11,8 @@ function jsx (type: string | any, config: JSX.ElementChildrenAttribute): JSX.Ele
     }
     return type(config)
   }
-  const { children = [], ...props } = config;
-  const childrenProps = Array().concat(children);
+  const { children = [], ...props } = config
+  const childrenProps = Array().concat(children)
   return {
     type,
     key: null,
@@ -48,11 +48,11 @@ class Component<P = {}> implements ijJSX.Component {
   }
 
   render (): ijJSX.Node {
-    return null;
+    return null
   }
 }
 
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
   jsx._globalThis = window
 }
 
@@ -73,7 +73,7 @@ jsx.renderDOM = (
     component = renderable
   }
 
-  const doc = (container === null) ? jsx._globalThis.document : container.ownerDocument;
+  const doc = (container === null) ? jsx._globalThis.document : container.ownerDocument
 
   if (node.type === jsx.TextNode) {
     if (node.props.text === undefined) {

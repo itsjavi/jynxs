@@ -1,27 +1,34 @@
 # @itsjavi/jsx-runtime
 
-Extremely lightweight JSX runtime (~ 2 KiB when minified) compatible with TypeScript and JavaScript, to be used together
-with [Bable automatic JSX runtime](https://babeljs.io/docs/en/babel-plugin-transform-react-jsx#react-automatic-runtime).
+Extremely lightweight JSX runtime (~ 2 KiB when minified) compatible with TypeScript and JavaScript, 
+to be used together with [Bable automatic JSX runtime](https://babeljs.io/docs/en/babel-plugin-transform-react-jsx#react-automatic-runtime).
 
 
 ## Why another React clone?
-Compared to other solutions like `Preact` and `Inferno`, which are an alternative to all React features, this project just focuses on minimalism: a simplistic JSX runtime with basic features to build things like standalone widgets that require some JavaScript like: form controls, context menus, modal forms, pop ups, color pickers, etc.
+Compared to other solutions like `Preact` and `Inferno`, which are an alternative to all React features, 
+this project just focuses on minimalism: a simple zero-dependency (except transpiler packages) JSX runtime with 
+basic features to build small components that require some JavaScript like: 
+form controls, context menus, modal forms, pop ups, color pickers, etc.
 
-The idea is that the final build of your widget will include the jsx-runtime, so it will be standalone and others won't need React or this runtime
-in order to use it. `microbundle` is a nice zero-configuration bundler for projects like that.
+The idea is that the final build of your component will be standalone, with zero dependencies 
+and able to be integrated into any app. `microbundle` is a good zero-configuration bundler for 
+projects like that.
 
+If you only need to be able to write JSX and bind some events, this library might be what you are looking for.
+If you need more complex functionality (state, hooks, etc.) you may want to use other solutions like React,
+Preact, etc.
 
 ## Designed Features
 
 - JSX Runtime written in TypeScript to ensure 100% compatibility
 - Minimal size (~2KiB minified), perfect for standalone UI packages
-- Can be used in the browser, node or electron (multi target builds)
+- Can be used in the browser, node or electron apps (multi target builds)
 - Class components and props support
 - Function components support (experimental)
 - props.children support (experimental)
 - Simple `onWillMount` and `onDidMount` component life-cycle methods (experimental)
-- Auto-join (with space) of array of strings in the `className` attribute
-- Auto-bind of functions to the component's "`this`", e.g. on `<div onClick={this.doSomething} />`
+- The `className` attribute supports an array of classes (will be auto-joined)
+- Event functions are automatically bound to the component's "`this`".
 
 
 ## Install
@@ -244,13 +251,13 @@ class PointInfo extends Component {
   }
 
   onClickFn (e: Event) {
-    console.log(this, e, "I am a sub button")
+    console.log("I am an example button", this, e)
   }
 
   render () {
     const { x, y } = this.props
     return (<div>{x} + {y}
-      <button onClick={this.onClickFn}>Sub button</button>
+      <button onClick={this.onClickFn}>Example button</button>
     </div>)
   }
 }
@@ -266,7 +273,7 @@ export default class Point extends Component {
 
 
   onClickFn (e: Event) {
-    console.log(this, e, e.target)
+    console.log('You clicked me!', this, e, e.target)
   }
 
   render () {
@@ -285,9 +292,9 @@ export default class Point extends Component {
       <>
         amet
       </>
-      <fnComp className="test-class">hello world</fnComp>
+      <fnComp className="discarded-attribute">hello world</fnComp>
       <PointInfo x={x} y={y}/>
-      <button onClick={this.onClickFn}>Click me</button>
+      <button className={['btn', 'btn-primary']} onClick={this.onClickFn}>Click me</button>
     </div>
   }
 }

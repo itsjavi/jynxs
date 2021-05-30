@@ -36,7 +36,6 @@
     "!**/*.spec.*",
     "!**/*.test.*",
     "!**/*.json",
-    "!**/*.yaml",
     "!**/*.yml",
     "CHANGELOG.md",
     "LICENSE",

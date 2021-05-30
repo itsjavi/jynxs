@@ -114,6 +114,8 @@ jsx.renderDOM = (
       }
       // @ts-ignore
       elem[name] = attrVal
+      // @ts-ignore
+      elem[name.toLowerCase()] = attrVal
     })
 
   if (Array.isArray(node.props.children)) {

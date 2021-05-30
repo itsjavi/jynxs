@@ -97,12 +97,8 @@ jsx.renderDOM = (
   const props = node.props
   const propKeys = Object.keys(props)
 
-  // classes
-  if (props['className'] !== undefined) {
-    props['class'] = props['className']
-  }
-  if ((props['class'] !== undefined) && Array.isArray(props['class'])) {
-    props['class'] = props['class'].join(' ')
+  if ((props['className'] !== undefined) && Array.isArray(props['className'])) {
+    props['className'] = props['className'].join(' ')
   }
 
   // assign attributes

@@ -1,10 +1,18 @@
 default: build
 
+deps:
+	npm install
+
 build:
 	npm run build
 
 dev:
 	npm run dev
+
+test: test-typecheck test-compile test-mocha
+
+test-typecheck:
+	tsc --noEmit
 
 test-compile:
 	rm -rf ./tests-compiled
@@ -12,8 +20,6 @@ test-compile:
  		  --retain-lines > ./src/jsx-runtime/index.mjs
 	babel --config-file=./tests/babel.config.json ./tests -x '.jsx' \
 		  --retain-lines -d ./tests-compiled --out-file-extension=.mjs
-
-test: test-compile test-mocha
 
 test-mocha:
 	mocha --require \"@babel/register\" 'tests-compiled/**/*.test.mjs'

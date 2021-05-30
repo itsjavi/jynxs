@@ -11,4 +11,4 @@ branches:
 
 script:
   - npm install
-  - make test
+  - npm test

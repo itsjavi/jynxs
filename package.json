@@ -44,8 +44,7 @@
   ],
   "scripts": {
     "dev": "run-s clean watch",
-    "test": "run-s test:*",
-    "test:typecheck": "tsc --noEmit",
+    "test": "make test",
     "test:compile": "make test-compile",
     "test:mocha": "make test-mocha",
     "build": "run-s clean build:*",

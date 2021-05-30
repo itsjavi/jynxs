@@ -35,7 +35,7 @@ function jsx (type: string | any, config: JSX.ElementChildrenAttribute): JSX.Ele
 
 jsx.Fragment = jsxFragment
 jsx.TextNode = jsxTextNode
-jsx.customAttributes = ['children', 'className', 'key', 'props']
+jsx.customAttributes = ['children', 'key', 'props']
 
 const isStandardAttribute = (key: string) => !jsx.customAttributes.includes(key)
 
@@ -97,13 +97,8 @@ jsx.renderDOM = (
   const props = node.props
   const propKeys = Object.keys(props)
 
-  // classes
-  if (props['className'] !== undefined) {
-    props['class'] = props['className']
-    delete props['className']
-  }
-  if ((props['class'] !== undefined) && Array.isArray(props['class'])) {
-    props['class'] = props['class'].join(' ')
+  if ((props['className'] !== undefined) && Array.isArray(props['className'])) {
+    props['className'] = props['className'].join(' ')
   }
 
   // assign attributes
@@ -117,6 +112,8 @@ jsx.renderDOM = (
           attrVal(null)
         }
       }
+      // @ts-ignore
+      elem[name] = attrVal
       // @ts-ignore
       elem[name.toLowerCase()] = attrVal
     })

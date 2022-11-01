@@ -1,5 +1,5 @@
 import {JSDOM} from 'jsdom'
-import {jsx, render} from '../src/jsx-runtime'
+import {jsx, render} from '../src/nanojsx'
 
 const createBlankPage = () => {
   const dom = new JSDOM('<html lang="en"><body></body></html>')

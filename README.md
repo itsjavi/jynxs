@@ -1,20 +1,20 @@
-# @itsjavi/jsx-runtime
+# @itsjavi/nanojsx
 
-[![npm](https://img.shields.io/npm/v/@itsjavi/jsx-runtime.svg)](https://www.npmjs.com/package/@itsjavi/jsx-runtime)
-[![Build Status](https://img.shields.io/github/workflow/status/itsjavi/jsx-runtime/test/main.svg)](https://travis-ci.org/itsjavi/jsx-runtime)
+[![npm](https://img.shields.io/npm/v/@itsjavi/nanojsx.svg)](https://www.npmjs.com/package/@itsjavi/nanojsx)
+[![Build Status](https://img.shields.io/github/workflow/status/itsjavi/nanojsx/test/main.svg)](https://travis-ci.org/itsjavi/nanojsx)
 
-Extremely lightweight JSX runtime (~ 2 KiB when minified) compatible with TypeScript and JavaScript, 
+Extremely lightweight JSX runtime (~ 2 KiB when minified) compatible with TypeScript and JavaScript,
 to be used together with [Bable automatic JSX runtime](https://babeljs.io/docs/en/babel-plugin-transform-react-jsx#react-automatic-runtime).
 
-
 ## Why another React clone?
-Compared to other solutions like `Preact` and `Inferno`, which are an alternative to all React features, 
-this project just focuses on minimalism: a simple zero-dependency (except transpiler packages) JSX runtime with 
-basic features to build small components that require some JavaScript like: 
+
+Compared to other solutions like `Preact` and `Inferno`, which are an alternative to all React features,
+this project just focuses on minimalism: a simple zero-dependency (except transpiler packages) JSX runtime with
+basic features to build small components that require some JavaScript like:
 form controls, context menus, modal forms, pop ups, color pickers, etc.
 
-The idea is that the final build of your component will be standalone, with zero dependencies 
-and able to be integrated into any app. `microbundle` is a good zero-configuration bundler for 
+The idea is that the final build of your component will be standalone, with zero dependencies
+and able to be integrated into any app. `microbundle` is a good zero-configuration bundler for
 projects like that.
 
 If you only need to be able to write JSX and bind some events, this library might be what you are looking for.
@@ -33,17 +33,16 @@ Preact, etc.
 - The `className` attribute supports an array of classes (will be auto-joined)
 - Event functions are automatically bound to the component's "`this`".
 
-
 ## Install
 
 ```bash
-npm i -D @itsjavi/jsx-runtime
+npm i -D @itsjavi/nanojsx
 ```
 
 or
 
 ```bash
-yarn add -D @itsjavi/jsx-runtime
+yarn add -D @itsjavi/nanojsx
 ```
 
 ## Configuration
@@ -87,30 +86,21 @@ Example `tsconfig.json`:
 
 ```json5
 {
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true,
-    "module": "ESNext",
-    "target": "ESNext",
-    "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable"
-    ],
-    "allowJs": true,
-    "jsx": "preserve",
-    "esModuleInterop": true,
-    "strict": true,
-    "sourceMap": true,
-    "moduleResolution": "Node" // important to find the proper JSX types on type check when writing TSX
+  compilerOptions: {
+    allowSyntheticDefaultImports: true,
+    noImplicitAny: true,
+    module: "ESNext",
+    target: "ESNext",
+    lib: ["ESNext", "DOM", "DOM.Iterable"],
+    allowJs: true,
+    jsx: "preserve",
+    esModuleInterop: true,
+    strict: true,
+    sourceMap: true,
+    moduleResolution: "Node", // important to find the proper JSX types on type check when writing TSX
   },
-  "files": [
-    "src/index.ts"
-  ],
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ]
+  files: ["src/index.ts"],
+  include: ["src/**/*.ts", "src/**/*.tsx"],
 }
 ```
 
@@ -118,66 +108,66 @@ Example `webpack.config.js` (you can use other bundlers too):
 
 ```js
 // Generated using webpack-cli http://github.com/webpack-cli
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require("path")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
 
 const baseConfig = {
-  mode: 'development',
+  mode: "development",
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: ['/node_modules/'],
+        exclude: ["/node_modules/"],
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-env']
-          }
-        }
+            presets: ["@babel/preset-env"],
+          },
+        },
       },
       {
         test: /\.(ts|tsx)$/,
-        exclude: ['/node_modules/'],
+        exclude: ["/node_modules/"],
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-typescript']
-          }
-        }
+            presets: ["@babel/preset-env", "@babel/preset-typescript"],
+          },
+        },
       },
       {
         test: /\.(js|css)$/,
-        enforce: 'pre',
-        use: ['source-map-loader']
+        enforce: "pre",
+        use: ["source-map-loader"],
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader', 'postcss-loader']
+        use: ["style-loader", "css-loader", "postcss-loader"],
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/,
-        type: 'asset'
-      }
+        type: "asset",
+      },
 
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
-    ]
+    ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.jsx']
-  }
+    extensions: [".tsx", ".ts", ".js", ".jsx"],
+  },
 }
 
 module.exports = [
   Object.assign({}, baseConfig, {
-    name: 'my-component',
-    devtool: 'inline-source-map',
-    entry: ['./src/index.ts'],
+    name: "my-component",
+    devtool: "inline-source-map",
+    entry: ["./src/index.ts"],
     output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: 'my-component.js'
-    }
-  })
+      path: path.resolve(__dirname, "dist"),
+      filename: "my-component.js",
+    },
+  }),
 ]
 ```
 
@@ -215,7 +205,7 @@ Example `package.json`:
     "@babel/plugin-transform-react-jsx": "^7.13.12",
     "@babel/preset-env": "^7.13.15",
     "@babel/preset-typescript": "^7.13.0",
-    "@itsjavi/jsx-runtime": "github:itsjavi/jsx-runtime",
+    "@itsjavi/nanojsx": "github:itsjavi/nanojsx",
     "autoprefixer": "^10.2.5",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.2.4",
@@ -230,10 +220,7 @@ Example `package.json`:
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2"
   },
-  "browserslist": [
-    "defaults",
-    "not IE 11"
-  ]
+  "browserslist": ["defaults", "not IE 11"]
 }
 ```
 
@@ -242,64 +229,80 @@ Example `package.json`:
 Examples:
 
 ```tsx
-import { Component } from '@itsjavi/jsx-runtime'
+import { BaseComponent } from "@itsjavi/nanojsx"
 
-function fnComp ({ a, b, children }: { a: number, b: number, children: any }): JSX.Element {
-  return <div>hey{a}, {b} <br/>{children}</div>
+function fnComp({
+  a,
+  b,
+  children,
+}: {
+  a: number
+  b: number
+  children: any
+}): JSX.Element {
+  return (
+    <div>
+      hey{a}, {b} <br />
+      {children}
+    </div>
+  )
 }
 
-class PointInfo extends Component {
-  constructor (public props: { x: number, y: number }) {
-    super(props);
+class PointInfo extends BaseComponent {
+  constructor(public props: { x: number; y: number }) {
+    super(props)
   }
 
-  onClickFn (e: Event) {
+  onClickFn(e: Event) {
     console.log("I am an example button", this, e)
   }
 
-  render () {
+  render() {
     const { x, y } = this.props
-    return (<div>{x} + {y}
-      <button onClick={this.onClickFn}>Example button</button>
-    </div>)
+    return (
+      <div>
+        {x} + {y}
+        <button onClick={this.onClickFn}>Example button</button>
+      </div>
+    )
   }
 }
 
-export default class Point extends Component {
+export default class Point extends BaseComponent {
   private ratio: number
 
-  constructor (public props: { x: number, y: number }) {
+  constructor(public props: { x: number; y: number }) {
     super(props)
     this.ratio = this.props.y / this.props.y
     this.onClickFn.bind(this)
   }
 
-
-  onClickFn (e: Event) {
-    console.log('You clicked me!', this, e, e.target)
+  onClickFn(e: Event) {
+    console.log("You clicked me!", this, e, e.target)
   }
 
-  render () {
+  render() {
     const { x, y } = this.props
 
-    return <div id="demo" className={['xx', 'yx']}>
-      <p>
-        Lorem
-        <b>
-          ipsum
-          <i>dolor</i>
-        </b>
-      </p>
-      <div>sit</div>
-      <hr/>
-      <>
-        amet
-      </>
-      <fnComp className="discarded-attribute">hello world</fnComp>
-      <PointInfo x={x} y={y}/>
-      <button className={['btn', 'btn-primary']} onClick={this.onClickFn}>Click me</button>
-    </div>
+    return (
+      <div id="demo" className={["xx", "yx"]}>
+        <p>
+          Lorem
+          <b>
+            ipsum
+            <i>dolor</i>
+          </b>
+        </p>
+        <div>sit</div>
+        <hr />
+        <>amet</>
+        <fnComp className="discarded-attribute">hello world</fnComp>
+        <PointInfo x={x} y={y} />
+        <button className={["btn", "btn-primary"]} onClick={this.onClickFn}>
+          Click me
+        </button>
+      </div>
+    )
   }
 }
-
 ```

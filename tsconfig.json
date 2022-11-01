@@ -12,8 +12,8 @@
     "sourceMap": true,
     "moduleResolution": "Node"
   },
-  "files": ["src/jsx-runtime/index.ts"],
-  "include": ["src/jsx-runtime/**/*.ts", "src/jsx-runtime/**/*.tsx"],
+  "files": ["src/nanojsx/index.ts"],
+  "include": ["src/nanojsx/**/*.ts", "src/nanojsx/**/*.tsx"],
   "exclude": [
     "**/node_modules",
     "src/**/__tests__",

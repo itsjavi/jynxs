@@ -1,6 +1,6 @@
 import {expect} from 'chai'
 import {it} from 'mocha'
-import {Component} from '../src/jsx-runtime'
+import {BaseComponent} from '../src/jsx-runtime'
 import {createGlobalBlankPage, h} from './helpers'
 
 beforeEach(createGlobalBlankPage)
@@ -21,7 +21,7 @@ describe('JSX Runtime', () => {
       console.log('button clicked', this, e)
     }
 
-    class PointInfo extends Component {
+    class PointInfo extends BaseComponent {
       constructor(props) {
         super(props)
       }

@@ -4,11 +4,7 @@
     "noImplicitAny": true,
     "module": "ESNext",
     "target": "ESNext",
-    "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "allowJs": true,
     "jsx": "preserve",
     "esModuleInterop": true,
@@ -16,11 +12,12 @@
     "sourceMap": true,
     "moduleResolution": "Node"
   },
-  "files": [
-    "src/jsx-runtime/index.ts"
-  ],
-  "include": [
-    "src/jsx-runtime/**/*.ts",
-    "src/jsx-runtime/**/*.tsx"
+  "files": ["src/jsx-runtime/index.ts"],
+  "include": ["src/jsx-runtime/**/*.ts", "src/jsx-runtime/**/*.tsx"],
+  "exclude": [
+    "**/node_modules",
+    "src/**/__tests__",
+    "src/**/*.test.ts",
+    "src/**/*.spec.ts"
   ]
 }

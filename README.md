@@ -1,7 +1,7 @@
 # @itsjavi/jsx-runtime
 
 [![npm](https://img.shields.io/npm/v/@itsjavi/jsx-runtime.svg)](https://www.npmjs.com/package/@itsjavi/jsx-runtime)
-[![Build Status](https://img.shields.io/github/workflow/status/itsjavi/jsx-runtime/test/main.svg)](https://travis-ci.org/itsjavi/jsx-runtime)
+[![Build Status](https://github.com/itsjavi/jsx-runtime/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/itsjavi/jsx-runtime/actions/workflows/test.yml)
 
 Extremely lightweight JSX runtime (~ 2 KiB when minified) compatible with TypeScript and JavaScript, 
 to be used together with [Bable automatic JSX runtime](https://babeljs.io/docs/en/babel-plugin-transform-react-jsx#react-automatic-runtime).

@@ -10,13 +10,19 @@ JynXS is a lightweight, JSX runtime that implements the very basics of a modern 
 
 - Custom JSX runtime implementation
 - Supports functional components (only)
-- Supports async components, also with a `fallback`.
+- Supports async components, also with a `fallback`. It means you don't need to wrap your components in `Suspense`.
 - Basic hooks implementation:
   - `useState` for state management
   - `useEffect` for side effects
 - Event handling
 - Supports `ref` as prop, to access DOM elements
 - TypeScript support
+
+### TO-DO
+
+- [ ] Add `cache()` to avoid expensive tasks on re-renders
+- [ ] Support and handle sync/async functions in form's `action`: `(data: FormData) => Promise<void>`
+- [ ] Add SSR compatibility
 
 ## Getting Started
 

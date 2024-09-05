@@ -22,8 +22,33 @@
   "license": "MIT",
   "author": "Javi Aguilar",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/bundle.js",
+      "require": "./dist/bundle.js"
+    },
+    "./jsx-runtime": {
+      "import": "./dist/bundle.js",
+      "require": "./dist/bundle.js"
+    },
+    "./jsx-dev-runtime": {
+      "import": "./dist/bundle.js",
+      "require": "./dist/bundle.js"
+    }
+  },
+  "main": "./dist/bundle.js",
+  "module": "./dist/bundle.js",
+  "types": "./dist/bundle.d.ts",
+  "files": [
+    "dist/bundle.js",
+    "dist/bundle.d.ts",
+    "dist/bundle.js.map",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && pnpm build:runtime",
+    "build:runtime": "tsup src/runtime/bundle.ts --dts --format=esm --minify --sourcemap",
     "dev": "vite",
     "format": "pnpm lint:fix",
     "lint": "publint && prettier --check .",
@@ -37,6 +62,7 @@
     "prettier": "^3.3.3",
     "publint": "^0.2.10",
     "sort-package-json": "^2.10.1",
+    "tsup": "^8.2.4",
     "typescript": "^5.5.4",
     "vite": "^5.4.3"
   },

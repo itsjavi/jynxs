@@ -1,13 +1,32 @@
 import { shallowEquals } from './utils'
 
+export declare namespace JSX {
+  // type HTMLAttributes = Record<string, JSXNode | undefined> & JSXChildren
+  type HTMLAttributes = Record<string, any | undefined>
+
+  interface IntrinsicElements {
+    [elemName: string]: any
+  }
+
+  type SyncElement = {
+    type: string | Function
+    props: {
+      children?: Element | Element[]
+      [key: string]: any
+    }
+  }
+
+  type Element = SyncElement | Promise<SyncElement>
+
+  type ElementType = string | ((props: any) => Element | Promise<Element>)
+}
+
 type Props = { [key: string]: any }
 type JSXRef =
   | {
       current: HTMLElement | null
     }
   | ((element: HTMLElement) => void)
-
-// type JSXNode = string | number | null | undefined | JSXElement | JSXNode[];
 
 type JSXElement = {
   type: string | Function

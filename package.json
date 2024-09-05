@@ -1,6 +1,6 @@
 {
   "name": "jynxs",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Lightweight React-like JSX runtime with the basics.",
   "keywords": [
     "react",

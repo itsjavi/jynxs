@@ -7,7 +7,7 @@ React.
 
 ## Core Features
 
-- Custom JSX runtime implementation
+- Custom JSX runtime implementation, in TypeScript
 - Supports functional components (only)
 - Supports async components, also with a `fallback`. It means you don't need to wrap your components in `Suspense`.
 - Basic hooks implementation:
@@ -15,18 +15,6 @@ React.
   - `useEffect` for side effects
 - Event handling
 - Supports `ref` as prop, to access DOM elements
-- TypeScript support
-
-### TO-DO
-
-- [ ] Support both `class` and `className`, and integrate with `clsx`, so arrays and conditional classes are supported.
-- [ ] Add a `useGlobalState` hook to manage and subscribe to global state in a very simple way
-- [ ] Better HTML attribute types
-- [ ] Add SSR compatibility
-- [ ] Support and handle sync/async functions in form's `action`: `(data: FormData) => Promise<void>`
-- [ ] Implement `cache()` to avoid expensive tasks on re-renders
-
-We won't add support for more complex features like advanced context, portals, style objects, custom hooks, etc.
 
 ## Getting Started
 
@@ -76,22 +64,13 @@ An example of how to use the JynXS runtime can be found in [`src/example.tsx`](.
 This file demonstrates the usage of functional components, async components, state management, effects, and event
 handling.
 
-## Building for Production
+### TO-DO
 
-To create a production build:
+- [ ] Support both `class` and `className`, and integrate with `clsx`, so arrays and conditional classes are supported.
+- [ ] Add a `useGlobalState` hook to manage and subscribe to global state in a very simple way
+- [ ] Better HTML attribute types
+- [ ] Add SSR compatibility
+- [ ] Support and handle sync/async functions in form's `action`: `(data: FormData) => Promise<void>`
+- [ ] Implement `cache()` to avoid expensive tasks on re-renders
 
-```
-pnpm build
-```
-
-## Technologies Used
-
-- Vite + esbuild
-- Custom JSX Runtime
-- TypeScript
-
-No Babel or Webpack needed to transpile the JSX, esbuild is used instead.
-
-## License
-
-[MIT License](LICENSE)
+We won't add support for more complex features like advanced context, portals, style objects, custom hooks, etc.

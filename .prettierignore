@@ -1,0 +1,6 @@
+# Ignore:
+build
+dist
+node_modules
+public
+pnpm-lock.yaml

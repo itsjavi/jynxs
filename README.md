@@ -66,11 +66,17 @@ handling.
 
 ### TO-DO
 
+This list is not a roadmap, but more a list of things that would be nice to have, and the order is random.
+
 - [ ] Support both `class` and `className`, and integrate with `clsx`, so arrays and conditional classes are supported.
 - [ ] Add a `useGlobalState` hook to manage and subscribe to global state in a very simple way
 - [ ] Better HTML attribute types
-- [ ] Add SSR compatibility
+- [ ] Implement `renderToString()` to render the UI to a string (for SSR)
 - [ ] Support and handle sync/async functions in form's `action`: `(data: FormData) => Promise<void>`
+- [ ] Implement `useFormStatus`
 - [ ] Implement `cache()` to avoid expensive tasks on re-renders
+- [ ] Escape text content to prevent XSS (and maybe support dangerouslySetInnerHTML?)
+- [ ] Error handling and error boundaries
+- [ ] Implement `useDebouncedState` / `useDebouncedCallback` helpers
 
 We won't add support for more complex features like advanced context, portals, style objects, custom hooks, etc.

@@ -1,3 +1,5 @@
+import { shallowEquals } from './utils'
+
 type Props = { [key: string]: any }
 type JSXRef =
   | {
@@ -28,6 +30,10 @@ type CurrentComponent = {
   domElement: HTMLElement | null
 }
 
+export type JynxsRef<T extends HTMLElement> = { current: T | null } | ((element: T) => void)
+
+const RESERVED_PROPS = ['key', 'ref', 'fallback', 'children']
+
 // ----------------------------------------------------------------------------
 // Global state
 let currentComponent: CurrentComponent | null = null // component being rendered
@@ -37,6 +43,7 @@ let componentElements: Map<CurrentComponent, HTMLElement> = new Map() // element
 
 const effectQueue: Array<() => void> = []
 const cleanupQueue: Array<() => void> = []
+const cleanUpMap: Map<CurrentComponent, Array<() => void>> = new Map()
 // ----------------------------------------------------------------------------
 
 /**
@@ -58,18 +65,17 @@ export function createElement(
 export async function renderJSX(
   jsxElement: JSXElement | Promise<JSXElement>,
   container: HTMLElement | ParentNode,
-  replaceNode?: HTMLElement,
-  componentMeta?: CurrentComponent,
+  nodeToBeReplaced?: HTMLElement,
 ): Promise<HTMLElement> {
   if (jsxElement instanceof Promise) {
     const awaitedElement = await jsxElement
-    return renderJSX(awaitedElement, container, replaceNode)
+    return renderJSX(awaitedElement, container, nodeToBeReplaced)
   }
 
   const { type, props, children, ref, fallback } = jsxElement
 
   if (typeof type === 'function') {
-    const componentInstance: CurrentComponent = componentMeta ?? {
+    const componentInstance: CurrentComponent = {
       effects: [],
       effectIndex: 0,
       states: [],
@@ -81,7 +87,6 @@ export async function renderJSX(
     currentComponent = componentInstance
 
     if (componentStates.has(componentInstance)) {
-      console.log('clearing stateIndex', componentInstance)
       componentInstance.stateIndex = 0
     }
 
@@ -90,29 +95,28 @@ export async function renderJSX(
     if (result instanceof Promise) {
       let fallbackNode: HTMLElement | undefined
       if (fallback) {
-        fallbackNode = document.createElement('div')
-        renderJSX(fallback, fallbackNode) // Render fallback synchronously
-        if (replaceNode) {
-          container.replaceChild(fallbackNode, replaceNode)
-        } else {
-          container.appendChild(fallbackNode)
-        }
+        fallbackNode = await renderJSX(fallback, container)
       }
 
       result.then((resolvedJSXElement) => {
-        renderJSX(resolvedJSXElement, container, fallbackNode || replaceNode)
+        // we call again ourselves to render the resolved element and replace the fallback
+        renderJSX(resolvedJSXElement, container, fallbackNode || nodeToBeReplaced)
       })
     } else {
-      const renderedElement = await renderJSX(result, container, replaceNode)
+      const renderedElement = await renderJSX(result, container, nodeToBeReplaced)
       componentInstance.domElement = renderedElement
       componentElements.set(componentInstance, renderedElement)
     }
 
     // Run effects after rendering
+    const instanceCleanupQueue = cleanUpMap.get(componentInstance) || []
+    if (!cleanUpMap.has(componentInstance)) {
+      cleanUpMap.set(componentInstance, instanceCleanupQueue)
+    }
     componentInstance.effects.forEach(({ effect }) => {
       const cleanup = effect()
       if (typeof cleanup === 'function') {
-        cleanupQueue.push(cleanup)
+        instanceCleanupQueue.push(cleanup)
       }
     })
 
@@ -120,13 +124,15 @@ export async function renderJSX(
     return componentInstance.domElement!
   }
 
+  // Here the type is already a standard HTML tag
+  // So we can directly create the DOM element
   const domElement: HTMLElement = document.createElement(type)
 
   // Apply props (like attributes)
   Object.entries(props).forEach(([key, value]) => {
     if (key.startsWith('on') && typeof value === 'function') {
       domElement.addEventListener(key.toLowerCase().substring(2), value)
-    } else if (key !== 'fallback' && key !== 'ref') {
+    } else if (!RESERVED_PROPS.includes(key)) {
       domElement.setAttribute(key, value)
     }
   })
@@ -143,16 +149,15 @@ export async function renderJSX(
 
   // Render children
   for (const child of safeChildren) {
-    if (typeof child === 'object' && child !== null) {
+    if (typeof child === 'object' || typeof child === 'function') {
       await renderJSX(child, domElement)
     } else {
       domElement.appendChild(document.createTextNode(String(child)))
     }
   }
 
-  if (replaceNode) {
-    // console.log('replaceChild', { node: domElement, child: replaceNode, container: container })
-    container.replaceChild(domElement, replaceNode)
+  if (nodeToBeReplaced) {
+    nodeToBeReplaced.replaceWith(domElement)
   } else {
     container.appendChild(domElement)
   }
@@ -163,16 +168,13 @@ export async function renderJSX(
 async function updateComponent(component: CurrentComponent) {
   const { element, domElement } = component
   if (!domElement) {
-    console.log('no domElement')
     return
   }
 
   const parentNode = domElement.parentNode
   if (!parentNode) {
-    console.log('no parentNode', domElement)
     return
   }
-  console.log('!HAS parentNode', parentNode)
 
   currentComponent = component
   component.stateIndex = 0
@@ -183,16 +185,18 @@ async function updateComponent(component: CurrentComponent) {
 
   currentComponent = null
 
-  // Run effects after updating
-  console.log('component.effects', component.effects.length)
+  const instanceCleanupQueue = cleanUpMap.get(component) || []
+  if (!cleanUpMap.has(component)) {
+    cleanUpMap.set(component, instanceCleanupQueue)
+  }
+  cleanup(instanceCleanupQueue)
+
   component.effects.forEach(({ effect }) => {
-    const cleanupEffect = effect()
-    if (typeof cleanupEffect === 'function') {
-      cleanupQueue.push(cleanupEffect)
+    const cleanup = effect()
+    if (typeof cleanup === 'function') {
+      instanceCleanupQueue.push(cleanup)
     }
   })
-
-  cleanup()
 }
 
 /**
@@ -209,7 +213,6 @@ export function useState<T>(initialValue: T): [T, StateSetter<T>] {
 
   // Get the current state index for this component
   const componentStateIndex = currentComponent.stateIndex++
-  console.log('componentStateIndex', componentStateIndex)
 
   // Initialize state arrays for the component if they don't exist
   if (!componentStates.has(currentComponent)) {
@@ -239,14 +242,12 @@ export function useState<T>(initialValue: T): [T, StateSetter<T>] {
           ? (newValue as (prevState: T) => T)(currentStates[componentStateIndex])
           : newValue
 
-      // Update the state value
-      currentStates[componentStateIndex] = value
-      // Trigger a re-render of the component
-      updateComponent(comp)
-
-      console.log('value', value, { componentStateIndex })
-      console.log('states.length', states.length)
-      console.log('setters.length', setters.length)
+      if (!shallowEquals(currentStates[componentStateIndex], value)) {
+        // Update the state value
+        currentStates[componentStateIndex] = value
+        // Trigger a re-render of the component
+        updateComponent(comp)
+      }
     }
     // Add the new setter to the setters array
     setters.push(setState)
@@ -287,14 +288,20 @@ export function useEffect(effect: Effect, deps: any[] | undefined = undefined) {
   }
 }
 
-/**
- * Cleanup function for useEffect hooks.
- */
-export function cleanup() {
+function cleanup(cleanupQueue: Array<() => void>) {
   while (cleanupQueue.length) {
     const cleanupEffect = cleanupQueue.shift()
     cleanupEffect && cleanupEffect()
   }
+}
+
+/**
+ * Cleanup function for useEffect hooks.
+ */
+export function cleanupEffectQueues() {
+  cleanUpMap.forEach((cleanupQueue) => {
+    cleanup(cleanupQueue)
+  })
 }
 
 export const jsx = createElement

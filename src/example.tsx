@@ -1,6 +1,6 @@
 import './example.css'
 
-import { cleanup, renderJSX, useEffect, useState } from './runtime/jsx-runtime'
+import { cleanupEffectQueues, JynxsRef, renderJSX, useEffect, useState } from './runtime/jsx-runtime'
 import libLogo from '/icon.png'
 import viteLogo from '/vite.svg'
 
@@ -14,9 +14,8 @@ const AsyncComponent = async () => {
   )
 }
 
-const Demos = () => {
-  const [count, setCount] = useState(0)
-  const inputRef = { current: null as HTMLInputElement | null }
+const CounterWidget = ({ defaultValue = 10 }: { defaultValue: number }) => {
+  const [count, setCount] = useState(defaultValue)
 
   useEffect(() => {
     console.log('useEffect: Component mounted!')
@@ -26,7 +25,20 @@ const Demos = () => {
     }
   }, [])
 
-  const handleClick = () => {
+  return (
+    <div class="flex-x">
+      <button type="button" onClick={() => setCount(count + 1)}>
+        Increment Count
+      </button>
+      <div>Count: {count}</div>
+    </div>
+  )
+}
+
+const Demos = () => {
+  const inputRef: JynxsRef<HTMLInputElement> = { current: null }
+
+  const handleBtnClick = () => {
     if (inputRef.current) {
       alert(`inputRef.current.value = ${inputRef.current.value}`)
     }
@@ -37,16 +49,11 @@ const Demos = () => {
       <div class="flex-y">
         <div class="flex-x">
           <input ref={inputRef} placeholder="Type something..." />
-          <button type="button" onClick={handleClick}>
+          <button type="button" onClick={handleBtnClick}>
             Alert Input Value
           </button>
         </div>
-        <div class="flex-x">
-          <button type="button" onClick={() => setCount(count + 1)}>
-            Increment Count
-          </button>
-          <div>Count: {count}</div>
-        </div>
+        <CounterWidget defaultValue={0} />
       </div>
       <AsyncComponent fallback={<p>Loading async component...</p>} />
     </>
@@ -86,4 +93,4 @@ if (!appElement) {
 renderJSX(<App />, appElement)
 
 // Cleanup on window unload
-window.addEventListener('beforeunload', cleanup)
+window.addEventListener('beforeunload', cleanupEffectQueues)

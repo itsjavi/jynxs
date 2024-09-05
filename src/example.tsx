@@ -75,8 +75,8 @@ const App = () => (
       </a>
     </h1>
     <p class="description">
-      JynXS is a lightweight, JSX runtime that implements the very basics of a modern UI library without relying on
-      React.
+      JynXS is a lightweight, ~3KB JSX runtime that implements the very basics of React including state and effects, but
+      adding many extras on top like async components and conditional classNames.
       <br />
       <br />
       Examples:

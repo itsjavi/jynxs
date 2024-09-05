@@ -1,10 +1,9 @@
 # JynXS: A tiny custom JSX Runtime
 
-JynXS is a lightweight, JSX runtime that implements the very basics of a modern UI library without relying on React.
+JynXS is a lightweight, ~3KB JSX runtime that implements the very basics of a modern UI library without relying on
+React.
 
 > This project is very experimental and a proof of concept. Not recommended for production use.
-
-> It will be released on NPM as soon as it's more stable and tested.
 
 ## Core Features
 
@@ -20,36 +19,59 @@ JynXS is a lightweight, JSX runtime that implements the very basics of a modern 
 
 ### TO-DO
 
-- [ ] Add `cache()` to avoid expensive tasks on re-renders
-- [ ] Support and handle sync/async functions in form's `action`: `(data: FormData) => Promise<void>`
+- [ ] Support both `class` and `className`, and integrate with `clsx`, so arrays and conditional classes are supported.
+- [ ] Add a `useGlobalState` hook to manage and subscribe to global state in a very simple way
+- [ ] Better HTML attribute types
 - [ ] Add SSR compatibility
+- [ ] Support and handle sync/async functions in form's `action`: `(data: FormData) => Promise<void>`
+- [ ] Implement `cache()` to avoid expensive tasks on re-renders
+
+We won't add support for more complex features like advanced context, portals, style objects, custom hooks, etc.
 
 ## Getting Started
 
-1. Clone the repository:
+1. Install the package with any package manager:
 
    ```
-   git clone https://github.com/itsjavi/jynxs.git
-   cd jynxs
+   pnpm add jynxs
+   # or
+   npm install jynxs
+   # or
+   bun add jynxs
    ```
 
-2. Install dependencies:
+2. Configure your `tsconfig.json` to use the JynXS runtime:
 
-   ```
-   pnpm install
+   ```json
+   {
+     "compilerOptions": {
+       "jsx": "react-jsx",
+       "jsxImportSource": "jynxs"
+     }
+   }
    ```
 
-3. Start the development server:
+3. Configure your Vite project to transpile JSX with esbuild:
 
-   ```
-   pnpm run dev
+   ```ts
+   // vite.config.ts
+   import { defineConfig } from 'vite'
+
+   export default defineConfig({
+     // ...
+     esbuild: {
+       jsxFactory: 'jsx',
+       jsxFragment: 'Fragment',
+     },
+     // ...
+   })
    ```
 
-4. Open your browser and navigate to `http://localhost:5173` to see the project in action.
+That's it!
 
 ## Usage Example
 
-An example of how to use the JynXS runtime can be found in `src/example.tsx`.
+An example of how to use the JynXS runtime can be found in [`src/example.tsx`](./src/example.tsx).
 
 This file demonstrates the usage of functional components, async components, state management, effects, and event
 handling.

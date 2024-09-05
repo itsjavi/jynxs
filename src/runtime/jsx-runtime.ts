@@ -24,11 +24,16 @@ type CurrentComponent = {
   states: any[]
   stateIndex: number
   element: JSXElement
+  setters: Array<StateSetter<any>>
+  domElement: HTMLElement | null
 }
 
 // ----------------------------------------------------------------------------
 // Global state
-let currentComponent: CurrentComponent | null = null
+let currentComponent: CurrentComponent | null = null // component being rendered
+let componentStates: Map<CurrentComponent, any[]> = new Map() // state of the components
+let componentSetters: Map<CurrentComponent, StateSetter<any>[]> = new Map() // setters of the components
+let componentElements: Map<CurrentComponent, HTMLElement> = new Map() // elements of the components
 
 const effectQueue: Array<() => void> = []
 const cleanupQueue: Array<() => void> = []
@@ -52,9 +57,10 @@ export function createElement(
  */
 export async function renderJSX(
   jsxElement: JSXElement | Promise<JSXElement>,
-  container: HTMLElement,
+  container: HTMLElement | ParentNode,
   replaceNode?: HTMLElement,
-): Promise<void> {
+  componentMeta?: CurrentComponent,
+): Promise<HTMLElement> {
   if (jsxElement instanceof Promise) {
     const awaitedElement = await jsxElement
     return renderJSX(awaitedElement, container, replaceNode)
@@ -63,14 +69,21 @@ export async function renderJSX(
   const { type, props, children, ref, fallback } = jsxElement
 
   if (typeof type === 'function') {
-    const componentInstance: CurrentComponent = {
+    const componentInstance: CurrentComponent = componentMeta ?? {
       effects: [],
       effectIndex: 0,
       states: [],
       stateIndex: 0,
       element: jsxElement,
+      setters: [],
+      domElement: null,
     }
     currentComponent = componentInstance
+
+    if (componentStates.has(componentInstance)) {
+      console.log('clearing stateIndex', componentInstance)
+      componentInstance.stateIndex = 0
+    }
 
     const result = type(props)
 
@@ -90,7 +103,9 @@ export async function renderJSX(
         renderJSX(resolvedJSXElement, container, fallbackNode || replaceNode)
       })
     } else {
-      await renderJSX(result, container, replaceNode)
+      const renderedElement = await renderJSX(result, container, replaceNode)
+      componentInstance.domElement = renderedElement
+      componentElements.set(componentInstance, renderedElement)
     }
 
     // Run effects after rendering
@@ -102,7 +117,7 @@ export async function renderJSX(
     })
 
     currentComponent = null
-    return
+    return componentInstance.domElement!
   }
 
   const domElement: HTMLElement = document.createElement(type)
@@ -136,41 +151,109 @@ export async function renderJSX(
   }
 
   if (replaceNode) {
+    // console.log('replaceChild', { node: domElement, child: replaceNode, container: container })
     container.replaceChild(domElement, replaceNode)
   } else {
     container.appendChild(domElement)
   }
+
+  return domElement
+}
+
+async function updateComponent(component: CurrentComponent) {
+  const { element, domElement } = component
+  if (!domElement) {
+    console.log('no domElement')
+    return
+  }
+
+  const parentNode = domElement.parentNode
+  if (!parentNode) {
+    console.log('no parentNode', domElement)
+    return
+  }
+  console.log('!HAS parentNode', parentNode)
+
+  currentComponent = component
+  component.stateIndex = 0
+  component.effectIndex = 0
+
+  const result = typeof element.type === 'function' ? element.type(element.props) : element.type
+  component.domElement = await renderJSX(result, parentNode, domElement)
+
+  currentComponent = null
+
+  // Run effects after updating
+  console.log('component.effects', component.effects.length)
+  component.effects.forEach(({ effect }) => {
+    const cleanupEffect = effect()
+    if (typeof cleanupEffect === 'function') {
+      cleanupQueue.push(cleanupEffect)
+    }
+  })
+
+  cleanup()
 }
 
 /**
  * useState hook to manage component state.
  */
+/**
+ * useState hook to manage component state.
+ */
 export function useState<T>(initialValue: T): [T, StateSetter<T>] {
+  // Ensure useState is called within a component
   if (!currentComponent) {
     throw new Error('useState must be called inside a component')
   }
 
-  console.log('useState-currentComponent', currentComponent.element, currentComponent)
-
+  // Get the current state index for this component
   const componentStateIndex = currentComponent.stateIndex++
+  console.log('componentStateIndex', componentStateIndex)
 
-  if (!currentComponent.states[componentStateIndex]) {
-    currentComponent.states[componentStateIndex] = initialValue
+  // Initialize state arrays for the component if they don't exist
+  if (!componentStates.has(currentComponent)) {
+    componentStates.set(currentComponent, [])
+    componentSetters.set(currentComponent, [])
   }
 
-  const setState: StateSetter<T> = (newValue) => {
-    if (!currentComponent) {
-      throw new Error('useState must be called inside a component')
+  // Get the state and setter arrays for the current component
+  const states = componentStates.get(currentComponent)!
+  const setters = componentSetters.get(currentComponent)!
+
+  // If this is a new state, initialize it with the provided value
+  if (componentStateIndex === states.length) {
+    states.push(initialValue)
+  }
+
+  // Store a reference to the current component
+  const comp = currentComponent
+
+  // Create a setter function for this state if it doesn't exist
+  if (componentStateIndex === setters.length || !setters[componentStateIndex]) {
+    const setState: StateSetter<T> = (newValue) => {
+      const currentStates = componentStates.get(comp)!
+      // Handle both direct values and updater functions
+      const value =
+        typeof newValue === 'function'
+          ? (newValue as (prevState: T) => T)(currentStates[componentStateIndex])
+          : newValue
+
+      // Update the state value
+      currentStates[componentStateIndex] = value
+      // Trigger a re-render of the component
+      updateComponent(comp)
+
+      console.log('value', value, { componentStateIndex })
+      console.log('states.length', states.length)
+      console.log('setters.length', setters.length)
     }
-    const value =
-      typeof newValue === 'function'
-        ? (newValue as (prevState: T) => T)(currentComponent.states[componentStateIndex])
-        : newValue
-    currentComponent.states[componentStateIndex] = value
-    renderJSX(currentComponent.element, document.getElementById('app')!) // Re-render
+    // Add the new setter to the setters array
+    setters.push(setState)
   }
 
-  return [currentComponent.states[componentStateIndex], setState]
+  // Return the current state value and its setter function
+  return [states[componentStateIndex], setters[componentStateIndex]]
 }
 
 /**

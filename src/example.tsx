@@ -4,7 +4,6 @@ import { cleanup, renderJSX, useEffect, useState } from './runtime/jsx-runtime'
 import libLogo from '/icon.png'
 import viteLogo from '/vite.svg'
 
-// Async component
 const AsyncComponent = async () => {
   await new Promise((resolve) => setTimeout(resolve, 2000)) // Simulate delay
   return (
@@ -15,15 +14,15 @@ const AsyncComponent = async () => {
   )
 }
 
-const App = () => {
+const Demos = () => {
   const [count, setCount] = useState(0)
   const inputRef = { current: null as HTMLInputElement | null }
 
   useEffect(() => {
-    console.log('Component mounted!')
+    console.log('useEffect: Component mounted!')
 
     return () => {
-      console.log('Cleanup on unmount')
+      console.log('useEffect: Cleanup on unmount')
     }
   }, [])
 
@@ -34,26 +33,7 @@ const App = () => {
   }
 
   return (
-    <div>
-      <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-        <img src={viteLogo} class="logo" alt="Vite logo" />
-      </a>
-      <a href="https://github.com/itsjavi/jynxs" target="_blank" rel="noreferrer">
-        <img src={libLogo} class="logo jynxs-logo" alt="TypeScript logo" />
-      </a>
-      <h1 key={123}>
-        Vite +{' '}
-        <a href="https://github.com/itsjavi/jynxs" target="_blank" rel="noreferrer">
-          JynXS
-        </a>
-      </h1>
-      <p class="description">
-        JynXS is a lightweight, JSX runtime that implements the very basics of a modern UI library without relying on
-        React.
-        <br />
-        <br />
-        Examples:
-      </p>
+    <>
       <div class="flex-y">
         <div class="flex-x">
           <input ref={inputRef} placeholder="Type something..." />
@@ -69,12 +49,37 @@ const App = () => {
         </div>
       </div>
       <AsyncComponent fallback={<p>Loading async component...</p>} />
-    </div>
+    </>
   )
 }
 
+const App = () => (
+  <div>
+    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
+      <img src={viteLogo} class="logo" alt="Vite logo" />
+    </a>
+    <a href="https://github.com/itsjavi/jynxs" target="_blank" rel="noreferrer">
+      <img src={libLogo} class="logo jynxs-logo" alt="TypeScript logo" />
+    </a>
+    <h1 key={123}>
+      Vite +{' '}
+      <a href="https://github.com/itsjavi/jynxs" target="_blank" rel="noreferrer">
+        JynXS
+      </a>
+    </h1>
+    <p class="description">
+      JynXS is a lightweight, JSX runtime that implements the very basics of a modern UI library without relying on
+      React.
+      <br />
+      <br />
+      Examples:
+    </p>
+    <Demos />
+  </div>
+)
+
 // Initial render
-const appElement = document.getElementById('app')
+const appElement = document.getElementById('root')
 if (!appElement) {
   throw new Error('No element with id "app" found')
 }

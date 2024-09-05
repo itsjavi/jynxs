@@ -19,6 +19,7 @@
     /* JSX settings */
     "jsx": "react-jsx",
     "jsxImportSource": "@app/runtime",
+    /* Import settings */
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
